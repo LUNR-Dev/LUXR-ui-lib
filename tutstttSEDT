@@ -1,0 +1,96 @@
+
+-- bypasses
+
+(function()
+    local real = getrenv().collectgarbage
+    
+    getrenv().collectgarbage = newcclosure(function(...)
+        if checkcaller() and tostring(getcallingscript()) == "Animator" then
+            local func = ...;
+            local con = debug.getconstants(func)
+            if con[1] and con[1]:match("\n") and con[2] and con[2] == "BAC_Client" then
+                return 2500;
+                
+                
+                
+
+                
+                
+                
+            end
+        end
+    return real(...)
+end)
+end)()
+
+local real1 = getrenv().gcinfo
+
+getrenv().gcinfo = newcclosure(function(...)
+    return 2500;
+end)
+	
+-- tween		
+function GetTime(Distance, Speed)
+    local Time = Distance / Speed;
+    return Time;
+end;
+    
+function oreoTween(targetpart,oreospeed)
+    local Speed = oreospeed;  local Distance = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - targetpart.Position).magnitude local Time = GetTime(Distance, Speed) local TweenService = game:GetService("TweenService") local oreottable = TweenInfo.new( Time, Enum.EasingStyle.Linear, Enum.EasingDirection.Out,  0, false, 0 ) local Tween = TweenService:Create(game.Players.LocalPlayer.Character.HumanoidRootPart,oreottable,{CFrame = targetpart.CFrame}) Tween:Play()
+end;
+
+
+
+--target check
+local targetcheck = false;
+game:GetService("RunService").Stepped:connect(function()
+	if game.Players.LocalPlayer.PlayerGui.ScreenGui.UI.Target.Visible == true and targetcheck then
+			game.Players.LocalPlayer.Character.Humanoid:SetStateEnabled(15, false);
+			game.Players.LocalPlayer.Character.Humanoid:SetStateEnabled(16, false);
+			game.Workspace.Gravity = 0.9;
+			oreoTween(game.Workspace[game.Players.LocalPlayer.PlayerGui.ScreenGui.UI.Target.TargetText.Text].HumanoidRootPart, 32.2);
+	else
+	    if game.Players.LocalPlayer.PlayerGui.ScreenGui.UI.Target.Visible == false then
+	    	game.Workspace.Gravity = 196.2
+		end;
+	end;
+	end);
+
+local Player = game.Players.LocalPlayer;
+local wS = game.Workspace;
+
+local ClosestPlayer = function()
+    local Closest = nil
+    local Distance = 9e9
+    for i, v in next, game:GetService("Players"):GetPlayers() do
+        if v.Name ~= Player.Name then
+            if wS[v.Name] and wS[v.Name]:FindFirstChild("Humanoid") and wS[v.Name]:FindFirstChild("Humanoid").Health ~= 0 then
+                local Magnitude = (Player.Character.Head.Position - wS[v.Name].HumanoidRootPart.Position).Magnitude
+                if Magnitude < Distance then
+                    Closest = wS[v.Name]
+                    Distance = Magnitude
+                    end
+                end
+            end
+        end
+    return Closest
+end
+local cooldown = false
+
+-- Stab aura
+task.spawn(function()
+    game:GetService("RunService").Stepped:connect(function()
+        if Player.Character and not cooldown then
+            if Player:DistanceFromCharacter(ClosestPlayer().HumanoidRootPart.Position) <= 7.5 then
+                Player.PlayerScripts.localknifehandler.HitCheck:Fire(ClosestPlayer())
+                coroutine.wrap(function()
+                    cooldown = true
+                    task.wait(0.9)
+                    cooldown = false
+                end)()
+            else
+                task.wait()
+            end
+        end
+    end)
+end)
