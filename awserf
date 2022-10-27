@@ -1309,14 +1309,7 @@ function library:Close()
 
     services.InputService.MouseIconEnabled = not self.open and self.mousestate or false
 
-    if self.holder then
-        self.holder.Visible = self.open
-    end
-
-    if self.cursor then
-        self.cursor.Visible = self.open
-    end
-end
+ 
 
 function library:ChangeThemeOption(option, color)
     self.theme[option] = color
@@ -1424,9 +1417,6 @@ function library:Unload()
         library:Close()
     end
 
-    if self.holder then
-        self.holder:Remove()
-    end
 
     if self.cursor then
         
