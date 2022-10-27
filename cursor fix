@@ -1312,6 +1312,8 @@ function library:Close()
     if self.holder then
         self.holder.Visible = self.open
     end
+
+
 end
 
 function library:ChangeThemeOption(option, color)
@@ -1424,9 +1426,7 @@ function library:Unload()
         self.holder:Remove()
     end
 
-    if then
-       
-    end
+
 
     if self.watermarkobject then
        self.watermarkobject:Remove() 
